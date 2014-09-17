@@ -19,8 +19,27 @@ type Atlas struct {
 	Values      Values              `json:"v"`
 	Properties  []Property          `json:"p"`
 	Expressions map[string][]string `json:"r"`
+	UAR         *UAR                `json:"uar"`
 
 	regexes []*regexp.Regexp
+}
+
+// parses regular expressions
+func (a *Atlas) parse() error {
+	defer func() {
+		a.Expressions = nil
+	}()
+
+	exprs, _ := a.Expressions[API_VERSION]
+	a.regexes = make([]*regexp.Regexp, 0, len(exprs))
+	for _, expr := range exprs {
+		x, err := regexp.Compile(expr)
+		if err != nil {
+			return err
+		}
+		a.regexes = append(a.regexes, x)
+	}
+	return nil
 }
 
 // Meta data

@@ -28,29 +28,31 @@ func Open(r io.Reader) (*Atlas, error) {
 		return nil, err
 	}
 
-	exprs, _ := atlas.Expressions[API_VERSION]
-	atlas.regexes = make([]*regexp.Regexp, len(exprs))
-	for i, expr := range exprs {
-		atlas.regexes[i] = regexp.MustCompile(expr)
+	if err = atlas.parse(); err != nil {
+		return nil, err
 	}
-
 	return &atlas, nil
 }
 
 // Find looks up the user agent string
 func (db *Atlas) Find(ua string) map[string]interface{} {
-	acc := make(map[int]int)
+	acc := make(Indices)
 	db.Tree.traverse(ua, db.regexes, acc)
 
+	overrides := db.UAR.update(ua, acc)
 	attrs := make(map[string]interface{}, len(acc))
 	for pi, vi := range acc {
 		prop := db.Properties[pi]
-		attrs[prop.Name] = prop.Convert(db.Values[vi])
+		if val, ok := overrides[pi]; ok {
+			attrs[prop.Name] = prop.Convert(val)
+		} else {
+			attrs[prop.Name] = prop.Convert(db.Values[vi])
+		}
 	}
 	return attrs
 }
 
-func (n *Node) traverse(ua string, regexes []*regexp.Regexp, acc map[int]int) {
+func (n *Node) traverse(ua string, regexes []*regexp.Regexp, acc Indices) {
 	for pi, vi := range n.Data {
 		acc[pi] = vi
 	}
@@ -67,4 +69,25 @@ func (n *Node) traverse(ua string, regexes []*regexp.Regexp, acc map[int]int) {
 			child.traverse(ua[i:], regexes, acc)
 		}
 	}
+}
+
+func (u *UAR) update(ua string, acc Indices) map[int]interface{} {
+	// Check if any of the pre-resolved properties require skipping UAR traversal
+	for _, pi := range u.Skip {
+		if acc[pi] > 0 {
+			return nil
+		}
+	}
+
+	res := make(map[int]interface{})
+	for _, rg := range u.RuleGroups {
+		for _, rule := range rg.Rules(ua, u.Regexes, acc) {
+			if rule.Vi != nil {
+				acc[rule.Pi] = *rule.Vi
+			} else if m := u.Regexes[rule.Ri].FindStringSubmatch(ua); rule.M < len(m) {
+				res[rule.Pi] = m[rule.M]
+			}
+		}
+	}
+	return res
 }
