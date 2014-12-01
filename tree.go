@@ -1,6 +1,6 @@
 package devatlas
 
-import "regexp"
+import "github.com/martinolsen/go-pcre/regexp"
 
 // Tree nodes
 type treeNode struct {

@@ -2,8 +2,9 @@ package devatlas
 
 import (
 	"encoding/json"
-	"regexp"
 	"strconv"
+
+	"github.com/martinolsen/go-pcre/regexp"
 )
 
 // Raw data format, as stored in the data file
@@ -130,29 +131,29 @@ func (v *mixedSlice) UnmarshalJSON(b []byte) error {
 	for i, item := range values {
 		switch t := item.(type) {
 		case int:
-			values[i] = uint32(t)
+			values[i] = int(t)
 		case int8:
-			values[i] = uint32(t)
+			values[i] = int(t)
 		case int16:
-			values[i] = uint32(t)
+			values[i] = int(t)
 		case int32:
-			values[i] = uint32(t)
+			values[i] = int(t)
 		case int64:
-			values[i] = uint32(t)
+			values[i] = int(t)
 		case uint:
-			values[i] = uint32(t)
+			values[i] = int(t)
 		case uint8:
-			values[i] = uint32(t)
+			values[i] = int(t)
 		case uint16:
-			values[i] = uint32(t)
+			values[i] = int(t)
 		case uint32:
-			values[i] = uint32(t)
+			values[i] = int(t)
 		case uint64:
-			values[i] = uint32(t)
+			values[i] = int(t)
 		case float32:
-			values[i] = uint32(t)
+			values[i] = int(t)
 		case float64:
-			values[i] = uint32(t)
+			values[i] = int(t)
 		}
 	}
 

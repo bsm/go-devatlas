@@ -7,4 +7,4 @@ test: deps
 	go test ./...
 
 bench: deps
-	go test ./... -bench=.
+	go test ./... -test.bench=. -test.benchmem

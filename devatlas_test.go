@@ -38,7 +38,7 @@ var _ = Describe("E2E", func() {
 		attrs := testDB.Find(testCases[0].ua)
 		Expect(attrs["vendor"]).To(Equal("Apple"))
 		Expect(attrs["wmv"]).To(Equal(false))
-		Expect(attrs["yearReleased"]).To(Equal(uint32(2007)))
+		Expect(attrs["yearReleased"]).To(Equal(int(2007)))
 	})
 
 	It("should apply UAR transformations", func() {

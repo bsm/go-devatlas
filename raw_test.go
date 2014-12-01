@@ -2,8 +2,8 @@ package devatlas
 
 import (
 	"encoding/json"
-	"regexp"
 
+	"github.com/martinolsen/go-pcre/regexp"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -26,7 +26,7 @@ var _ = Describe("mixedSlice", func() {
 		err := json.Unmarshal([]byte(`["a",1,2,7,"b",2538591,"x"]`), &v)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(v).To(Equal(mixedSlice{
-			"a", uint32(1), uint32(2), uint32(7), "b", uint32(2538591), "x",
+			"a", int(1), int(2), int(7), "b", int(2538591), "x",
 		}))
 	})
 

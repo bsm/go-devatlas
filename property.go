@@ -2,8 +2,6 @@ package devatlas
 
 import "encoding/json"
 
-const trueValue uint32 = 1
-
 // A property is a node attribute
 type Property struct {
 	Kind uint8
@@ -14,7 +12,7 @@ type Property struct {
 func (p *Property) Convert(v interface{}) interface{} {
 	switch p.Kind {
 	case KIND_BOOL:
-		return v == trueValue
+		return v == 1
 	}
 	return v
 }
