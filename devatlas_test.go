@@ -2,23 +2,21 @@ package devatlas
 
 import (
 	"encoding/json"
-
 	"testing"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Devatlas", func() {
+var _ = Describe("E2E", func() {
 
-	It("should open DB", func() {
+	It("should open DBs", func() {
 		Expect(testDB.Meta).NotTo(BeNil())
 		Expect(testDB.Meta.Ver).To(MatchRegexp(`\d+\.\d+`))
 
 		Expect(testDB.Values).NotTo(BeEmpty())
 		Expect(testDB.Properties).NotTo(BeEmpty())
-		Expect(testDB.Expressions).To(BeNil())
-		Expect(testDB.regexes).NotTo(BeEmpty())
+		Expect(testDB.Regexp).NotTo(BeEmpty())
 		Expect(testDB.Tree).NotTo(BeNil())
 		Expect(testDB.Tree.Children).NotTo(BeEmpty())
 		Expect(testDB.Tree.Data).To(BeEmpty())
@@ -43,7 +41,7 @@ var _ = Describe("Devatlas", func() {
 			`{"3gp.aac.lc":true,"3gp.amr.nb":true,"3gp.amr.wb":false,"3gp.h263":true,"3gp.h264.level10":true,"3gp.h264.level10b":true,"3gp.h264.level11":true,"3gp.h264.level12":true,"3gp.h264.level13":true,"aac":true,"amr":true,"browserName":"Android Browser","browserRenderingEngine":"WebKit","cldc":"1.1","cookieSupport":true,"css.animations":true,"css.columns":true,"css.transforms":true,"css.transitions":true,"developerPlatform":"Android","devicePixelRatio":"1.5","diagonalScreenSize":"3.82","displayColorDepth":24,"displayHeight":800,"displayPpi":244,"displayWidth":480,"drmOmaCombinedDelivery":false,"drmOmaForwardLock":true,"drmOmaSeparateDelivery":false,"edge":true,"flashCapable":true,"gprs":true,"hsdpa":true,"html.audio":true,"html.canvas":true,"html.inlinesvg":false,"html.svg":false,"html.video":true,"https":true,"id":1824544,"image.Gif87":true,"image.Gif89a":false,"image.Jpg":true,"image.Png":true,"isBrowser":false,"isChecker":false,"isDownloader":false,"isEReader":false,"isFeedReader":false,"isFilter":false,"isGamesConsole":false,"isMediaPlayer":false,"isMobilePhone":true,"isRobot":false,"isSetTopBox":false,"isSpam":false,"isTV":false,"isTablet":false,"jqm":true,"js.applicationCache":true,"js.deviceMotion":false,"js.deviceOrientation":false,"js.geoLocation":true,"js.indexedDB":false,"js.json":true,"js.localStorage":true,"js.modifyCss":true,"js.modifyDom":true,"js.querySelector":true,"js.sessionStorage":true,"js.supportBasicJavaScript":true,"js.supportConsoleLog":true,"js.supportEventListener":true,"js.supportEvents":true,"js.touchEvents":true,"js.webGl":false,"js.webSockets":false,"js.webSqlDatabase":true,"js.webWorkers":false,"js.xhr":true,"jsr118":false,"jsr139":false,"jsr30":false,"jsr37":false,"lteAdvanced":false,"manufacturer":"HTC","marketingName":"Passion","markup.wml1":false,"markup.xhtmlBasic10":true,"markup.xhtmlMp10":true,"markup.xhtmlMp11":true,"markup.xhtmlMp12":true,"memoryLimitDownload":0,"memoryLimitEmbeddedMedia":0,"memoryLimitMarkup":0,"midiMonophonic":true,"midiPolyphonic":true,"midp":"2.0","mobileDevice":true,"model":"Nexus One","mp3":true,"mp4.aac.lc":true,"mp4.h264.level11":true,"mp4.h264.level13":true,"nfc":false,"osAndroid":true,"osBada":false,"osLinux":true,"osName":"Android","osOsx":false,"osRim":false,"osSymbian":false,"osVersion":"2.2","osWebOs":false,"osWindows":false,"osWindowsMobile":false,"osWindowsPhone":false,"osWindowsRt":false,"osiOs":false,"primaryHardwareType":"Mobile Phone","qcelp":false,"stream.3gp.aac.lc":true,"stream.3gp.amr.nb":false,"stream.3gp.amr.wb":false,"stream.3gp.h263":true,"stream.3gp.h264.level10":true,"stream.3gp.h264.level10b":false,"stream.3gp.h264.level11":false,"stream.3gp.h264.level12":false,"stream.3gp.h264.level13":true,"stream.mp4.aac.lc":false,"stream.mp4.h264.level11":true,"stream.mp4.h264.level13":true,"supportsClientSide":true,"touchScreen":true,"umts":true,"uriSchemeSms":true,"uriSchemeSmsTo":true,"uriSchemeTel":true,"usableDisplayHeight":720,"usableDisplayWidth":380,"vCardDownload":false,"vendor":"HTC","wmv":false,"yearReleased":2010}`},
 	}
 
-	It("should find attrbutes", func() {
+	It("should find attributes", func() {
 		for _, tc := range testCases {
 			attrs := testDB.Find(tc.ua)
 			bin, err := json.Marshal(attrs)
@@ -57,7 +55,7 @@ var _ = Describe("Devatlas", func() {
 		attrs := testDB.Find(testCases[0].ua)
 		Expect(attrs["vendor"]).To(Equal("Apple"))
 		Expect(attrs["wmv"]).To(Equal(false))
-		Expect(attrs["yearReleased"]).To(Equal(int(2007)))
+		Expect(attrs["yearReleased"]).To(Equal(uint32(2007)))
 	})
 
 	It("should apply UAR transformations", func() {
@@ -74,7 +72,7 @@ func TestSuite(t *testing.T) {
 	RunSpecs(t, "github.com/bsm/devatlas")
 }
 
-var testDB *Atlas
+var testDB *DB
 
 var _ = BeforeSuite(func() {
 	var err error
