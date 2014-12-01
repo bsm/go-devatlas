@@ -5,3 +5,6 @@ deps:
 
 test: deps
 	go test ./...
+
+bench: deps
+	go test ./... -bench=.
