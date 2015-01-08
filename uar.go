@@ -1,7 +1,5 @@
 package devatlas
 
-import "github.com/martinolsen/go-pcre/regexp"
-
 // UAR extensions
 type UAR struct {
 	Skip       []int        `json:"sk"`
@@ -45,7 +43,7 @@ type ruleSet struct {
 	Rules []rule `json:"r"`
 }
 
-func (rs *ruleSet) Match(exps []*regexp.Regexp, ua string) bool {
+func (rs *ruleSet) Match(exps []*Regexp, ua string) bool {
 	if rs.Mi == nil {
 		return false
 	}
@@ -61,7 +59,7 @@ type ruleGroup struct {
 }
 
 // matches a list of rules for a given UA and pre-matched property-value indices
-func (rg *ruleGroup) matchRules(ua string, exps []*regexp.Regexp, acc indexMap) []rule {
+func (rg *ruleGroup) matchRules(ua string, exps []*Regexp, acc indexMap) []rule {
 	// Ensure that requirements are all met
 	if len(rg.Reqs) == 0 {
 		return nil

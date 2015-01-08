@@ -3,7 +3,6 @@ package devatlas
 import (
 	"encoding/json"
 
-	"github.com/martinolsen/go-pcre/regexp"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -39,8 +38,8 @@ var _ = Describe("regexpSliceV", func() {
 		err := json.Unmarshal([]byte(`{"5":["A","B"], "6":["C","D"]}`), &v)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(v).To(Equal(regexpSliceV{
-			regexp.MustCompile(`C`),
-			regexp.MustCompile(`D`),
+			rxMustCompile(`C`),
+			rxMustCompile(`D`),
 		}))
 	})
 
@@ -53,9 +52,9 @@ var _ = Describe("regexpSliceO", func() {
 		err := json.Unmarshal([]byte(`{"d":["A", "B", "C"], "6":{"1":"D"}}`), &s)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(s).To(Equal(regexpSliceO{
-			regexp.MustCompile(`A`),
-			regexp.MustCompile(`D`),
-			regexp.MustCompile(`C`),
+			rxMustCompile(`A`),
+			rxMustCompile(`D`),
+			rxMustCompile(`C`),
 		}))
 	})
 

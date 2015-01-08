@@ -3,8 +3,6 @@ package devatlas
 import (
 	"encoding/json"
 	"strconv"
-
-	"github.com/martinolsen/go-pcre/regexp"
 )
 
 // Raw data format, as stored in the data file
@@ -53,7 +51,7 @@ func (i *indexMap) UnmarshalJSON(b []byte) error {
 //     "5":["A","B"],
 //     "6":["C","D"]
 //   }
-type regexpSliceV []*regexp.Regexp
+type regexpSliceV []*Regexp
 
 func (s *regexpSliceV) UnmarshalJSON(b []byte) error {
 	var raw map[string][]string
@@ -64,7 +62,7 @@ func (s *regexpSliceV) UnmarshalJSON(b []byte) error {
 	plain, _ := raw[API_VERSION]
 	slice := make(regexpSliceV, len(plain))
 	for i, expr := range plain {
-		x, err := regexp.Compile(expr)
+		x, err := rxCompile(expr)
 		if err != nil {
 			return err
 		}
@@ -80,7 +78,7 @@ func (s *regexpSliceV) UnmarshalJSON(b []byte) error {
 //     "D":["A","B"],
 //     "6":{"1":"C"}
 //   }
-type regexpSliceO []*regexp.Regexp
+type regexpSliceO []*Regexp
 
 func (s *regexpSliceO) UnmarshalJSON(b []byte) error {
 	var raw struct {
@@ -94,7 +92,7 @@ func (s *regexpSliceO) UnmarshalJSON(b []byte) error {
 
 	slice := make(regexpSliceO, 0, len(raw.Defaults))
 	for _, expr := range raw.Defaults {
-		x, err := regexp.Compile(expr)
+		x, err := rxCompile(expr)
 		if err != nil {
 			return err
 		}
@@ -102,7 +100,7 @@ func (s *regexpSliceO) UnmarshalJSON(b []byte) error {
 	}
 
 	for s, expr := range raw.Overrides {
-		x, err := regexp.Compile(expr)
+		x, err := rxCompile(expr)
 		if err != nil {
 			return err
 		}

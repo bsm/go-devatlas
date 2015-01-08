@@ -1,7 +1,5 @@
 package devatlas
 
-import "github.com/martinolsen/go-pcre/regexp"
-
 // Tree nodes
 type treeNode struct {
 	Children    map[string]*treeNode `json:"c,omitempty"`
@@ -9,7 +7,7 @@ type treeNode struct {
 	Corrections []int                `json:"r,omitempty"`
 }
 
-func (n *treeNode) traverse(ua string, regexes []*regexp.Regexp, acc indexMap) {
+func (n *treeNode) traverse(ua string, regexes []*Regexp, acc indexMap) {
 	// Merge node attributes into acc
 	for pid, vid := range n.Data {
 		acc[pid] = vid
